@@ -52,3 +52,84 @@ def main(_):
         D[p] = b
 
     # Create training and testing splits from our data dictionary
+    train_keys, test_keys = train_test_split(list(D.keys()),
+                                             test_size=config.TEST_SIZE, random_state=42)
+
+    # Initialize the data split files
+    datasets = [
+        ("train", train_keys, config.TRAIN_RECORD),
+        ("test", test_keys, config.TEST_RECORD)
+    ]
+
+    # Loop over the datasets
+    for d_type, keys, output_path in datasets:
+        # Initialize the TensorFlow writer and intialize the total
+        # number of examples written to file
+        print("[INFO] Processing '{}'...".format(d_type))
+        writer = tf.python_io.TFRecordWriter(output_path)
+        total = 0
+
+        # Loop over all the keys in the current set
+        for k in keys:
+            # Load the input image from disk as a TensorFlow object
+            encoded = tf.gfile.GFile(k, "rb").read()
+            encoded = bytes(encoded)
+
+            # Load the image from disk again, this time as a PIL
+            # object
+            pil_image = Image.open(k)
+            w, h = pil_image.size[:2]
+
+            # Parse the filename and encoding from the input path
+            filename = k.split(os.path.sep)[-1]
+            encoding = filename[filename.rfind(".") + 1:]
+
+            # Initialize the annotation object used to store
+            # information regarding the bounding box + labels
+            tf_annot = TFAnnotation()
+            tf_annot.image = encoded
+            tf_annot.encoding = encoding
+            tf_annot.filename = filename
+            tf_annot.width = w
+            tf_annot.height = h
+
+            # Loop over the bounding boxes + labels associated with
+            # the image
+            for label, (start_x, start_y, end_x, end_y) in D[k]:
+                # TensorFlow assumes all bounding boxes are in the
+                # range [0, 1] so we need to scale them
+                x_min = start_x / w
+                x_max = end_x / w
+                y_min = start_y / h
+                y_max = end_y / h
+
+                # Update the bounding boxes + label lists
+                tf_annot.x_mins.append(x_min)
+                tf_annot.x_maxs.append(x_max)
+                tf_annot.y_mins.append(y_min)
+                tf_annot.y_maxs.append(y_max)
+                tf_annot.text_labels.append(label.encode("utf8"))
+                tf_annot.classes.append(config.CLASSES[label])
+                tf_annot.difficult.append(0)
+
+                # Increment the total number of examples
+                total += 1
+
+            # Encode the data point attributes using the Tensorflow
+            # helper functions
+            features = tf.train.Features(feature=tf_annot.build())
+            example = tf.train.Example(features=features)
+
+            # Add the example to the writer
+            writer.write(example.SerializeToString())
+
+        # Close the writer and print diagnostic information to the
+        # user
+        writer.close()
+        print("[INFO] {} examples saved for '{}'".format(total,
+                                                         d_type))
+
+
+# Check to see if the main thread should be started
+if __name__ == "__main__":
+    tf.app.run()
