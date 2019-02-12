@@ -16,9 +16,9 @@ def main(_):
     for k, v in config.CLASSES.items():
         # Construct the class information and write to file
         item = ("item {\n"
-                    "\tid: " + str(v) + "\n"
-                    "\tname: '" + k + "'\n"
-                    "}\n")
+                "\tid: " + str(v) + "\n"
+                "\tname: '" + k + "'\n"
+                "}\n")
         f.write(item)
 
     # Close the output classes file
