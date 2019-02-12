@@ -1,3 +1,5 @@
+import cv2
+
 from config import lisa_config as config
 from utils.tfannotation import TFAnnotation
 from sklearn.model_selection import train_test_split
@@ -48,7 +50,7 @@ def main(_):
 
         # Build a tuple consisting of the label and bounding box,
         # then update the list and store it in the dictionary
-        b.append((label, start_x, start_y, end_x, end_y))
+        b.append((label, (start_x, start_y, end_x, end_y)))
         D[p] = b
 
     # Create training and testing splits from our data dictionary
@@ -102,6 +104,29 @@ def main(_):
                 x_max = end_x / w
                 y_min = start_y / h
                 y_max = end_y / h
+
+                """
+                Visually check that things are working as expected
+                """
+                if config.VISUALLY_CHECK and total < 10:
+                    # Load the input image from disk and denormalize the
+                    # bounding box coordinates
+                    image = cv2.imread(k)
+                    start_x = int(x_min * w)
+                    start_y = int(y_min * h)
+                    end_x = int(x_max * w)
+                    end_y = int(y_max * h)
+
+                    # Draw the bounding box on the image
+                    cv2.rectangle(image, (start_x, start_y), (end_x, end_y),
+                                  (0, 255, 0), 2)
+
+                    # Add the label
+                    cv2.putText(image, label, (start_x - 10, start_y), cv2.FONT_HERSHEY_COMPLEX, 4, (0, 255, 0), 2,
+                                cv2.LINE_AA)
+
+                    # Save the labeled image
+                    cv2.imwrite("Verify-" + str(total) + ".png", image)
 
                 # Update the bounding boxes + label lists
                 tf_annot.x_mins.append(x_min)

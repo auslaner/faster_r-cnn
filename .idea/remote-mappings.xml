@@ -3,13 +3,7 @@
   <component name="RemoteMappingsManager">
     <list>
       <list>
-        <remote-mappings server-id="python@sftp://u6000791@kingspeak.chpc.utah.edu:22/uufs/chpc.utah.edu/common/home/u6000791/venv/tfod/bin/python">
-          <settings>
-            <list>
-              <mapping local-root="$PROJECT_DIR$" remote-root="/uufs/chpc.utah.edu/common/home/u6000791/fastr" />
-            </list>
-          </settings>
-        </remote-mappings>
+        <remote-mappings server-id="python@sftp://u6000791@kingspeak.chpc.utah.edu:22/uufs/chpc.utah.edu/common/home/u6000791/venv/tfod/bin/python" />
       </list>
     </list>
   </component>

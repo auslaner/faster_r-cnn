@@ -17,3 +17,6 @@ TEST_SIZE = 0.25
 
 # Initialize the class labels dictionary
 CLASSES = {"pedestrianCrossing": 1, "signalAhead": 2, "stop": 3}
+
+# Show images to see if things are working as we expect
+VISUALLY_CHECK = True
