@@ -5,9 +5,9 @@ BASE_PATH = "/scratch/general/lustre/u6000791/pollinators"
 
 # Build the path to the output training and testing record files,
 # along with the class labels file
-TRAIN_RECORD = os.path.sep.join([BASE_PATH, "records/training.record"])
-TEST_RECORD = os.path.sep.join([BASE_PATH, "records/testing.record"])
-CLASSES_FILE = os.path.sep.join([BASE_PATH, "records/classes.pbtxt"])
+TRAIN_RECORD = os.path.sep.join([BASE_PATH, "data/training.record"])
+TEST_RECORD = os.path.sep.join([BASE_PATH, "data/testing.record"])
+CLASSES_FILE = os.path.sep.join([BASE_PATH, "data/classes.pbtxt"])
 
 # Initialize the test split size
 TEST_SIZE = 0.25

@@ -115,6 +115,8 @@ def main(_):
                 end_x < 0 or \
                 end_y < 0:
             logging.warning("[!] Bounding box out of bounds!")
+            # TODO Remove continue if this works..
+            continue
 
         # Extract the count from the pollinator image path
         count = pol_path.split("-")[-1].split(".")[0]

@@ -30,7 +30,7 @@ class TFAnnotation:
         w = int64_feature(self.width)
         h = int64_feature(self.height)
         filename = bytes_feature(self.filename.encode("utf8"))
-        encoding = bytes_feature(self.image)
+        encoding = bytes_feature(self.encoding.encode("utf8"))
         image = bytes_feature(self.image)
         x_mins = float_list_feature(self.x_mins)
         x_maxs = float_list_feature(self.x_maxs)
