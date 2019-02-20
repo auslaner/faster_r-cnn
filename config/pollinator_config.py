@@ -13,7 +13,7 @@ CLASSES_FILE = os.path.sep.join([BASE_PATH, "data/classes.pbtxt"])
 TEST_SIZE = 0.25
 
 # Initialize the class labels dictionary
-CLASSES = {"Pollinator": 1}
+CLASSES = {"Osmia": 1, "Masarinae": 2, "Other": 3}
 
 # Show images to see if things are working as we expect
-VISUALLY_CHECK = False
+VISUALLY_CHECK = True

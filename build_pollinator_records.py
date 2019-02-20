@@ -15,6 +15,11 @@ from config import pollinator_config as config
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.ERROR)
 
+LARGE_POLLINATORS = ["Bombus",
+                     "Butterfly"
+                     "Hyles lineata",
+                     "Masarinae"]
+
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
@@ -93,15 +98,24 @@ def main(_):
         print("*" * 35)
         print("[*] Looping over database row {}...\n".format(num))
         # Break the row into components
-        _, _, video, _, image_name, label, _, _, _, _, _, bbox, _, fnum, _, pol_path, _ = row
+        _, _, video, _, image_name, _, _, _, _, _, _, bbox, _, fnum, _, pol_path, pol_id = row
         start_x, start_y, w, h = bbox.split(" ")
         start_x, start_y = float(start_x), float(start_y)
+        # If the bounding box is 100 x 100 and the pollinator class
+        # is small, reduce the size of the bounding box
+        if w == "100" and h == "100":
+            if pol_id not in LARGE_POLLINATORS:
+                # Reposition the box
+                start_x += 30
+                start_y += 30
+                w = 40
+                h = 40
         end_x = start_x + float(w)
         end_y = start_y + float(h)
 
         logging.debug("Video: {}".format(video))
         logging.debug("Image Name: {}".format(image_name))
-        logging.debug("Label: {}".format(label))
+        logging.debug("Label: {}".format(pol_id))
         logging.debug("Bounding Box: {}".format(bbox))
         logging.debug("Start X: {}".format(start_x))
         logging.debug("Start Y: {}".format(start_y))
@@ -110,13 +124,8 @@ def main(_):
         logging.debug("Frame Number: {}".format(fnum))
         logging.debug("Pollinator Image Path: {}".format(pol_path))
 
-        if start_x < 0 or \
-                start_y < 0 or \
-                end_x < 0 or \
-                end_y < 0:
-            logging.warning("[!] Bounding box out of bounds!")
-            # TODO Remove continue if this works..
-            continue
+        # Minor classes are pooled into 'Other' class
+        label = pol_id if pol_id in config.CLASSES.keys() else "Other"
 
         # Extract the count from the pollinator image path
         count = pol_path.split("-")[-1].split(".")[0]
