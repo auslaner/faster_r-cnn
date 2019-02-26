@@ -51,9 +51,7 @@ def select_all_examples(conn):
     :return: List of database rows
     """
     cur = conn.cursor()
-    cur.execute("SELECT * FROM logentry WHERE classification = 'Pollinator'"
-                "AND bbox != 'Whole'"
-                "AND img_path IS NOT NULL")
+    cur.execute("SELECT * FROM tfodinfo;")
 
     rows = cur.fetchall()
 
@@ -98,42 +96,18 @@ def main(_):
         print("*" * 35)
         print("[*] Looping over database row {}...\n".format(num))
         # Break the row into components
-        _, _, video, _, image_name, _, _, _, _, _, _, bbox, _, fnum, _, pol_path, pol_id = row
-        start_x, start_y, w, h = bbox.split(" ")
-        start_x, start_y = float(start_x), float(start_y)
-        # If the bounding box is 100 x 100 and the pollinator class
-        # is small, reduce the size of the bounding box
-        if w == "100" and h == "100":
-            if pol_id not in LARGE_POLLINATORS:
-                # Reposition the box
-                start_x += 30
-                start_y += 30
-                w = 40
-                h = 40
-        end_x = start_x + float(w)
-        end_y = start_y + float(h)
+        _, _, frame_fname, label, start_x, start_y, end_x, end_y, multi_poll = row
 
-        logging.debug("Video: {}".format(video))
-        logging.debug("Image Name: {}".format(image_name))
-        logging.debug("Label: {}".format(pol_id))
-        logging.debug("Bounding Box: {}".format(bbox))
         logging.debug("Start X: {}".format(start_x))
         logging.debug("Start Y: {}".format(start_y))
         logging.debug("End X: {}".format(end_x))
         logging.debug("End Y: {}".format(end_y))
-        logging.debug("Frame Number: {}".format(fnum))
-        logging.debug("Pollinator Image Path: {}".format(pol_path))
 
         # Minor classes are pooled into 'Other' class
-        label = pol_id if pol_id in config.CLASSES.keys() else "Other"
+        label = label if label in config.CLASSES.keys() else "Other"
 
-        # Extract the count from the pollinator image path
-        count = pol_path.split("-")[-1].split(".")[0]
-
-        logging.debug("Count: {}".format(count))
-
-        # Reconstruct the frame image filename
-        frame_fname = get_filename(fnum, count, video, True)
+        # Adapt file path for server
+        frame_fname = frame_fname.split("/")[-1]
 
         logging.debug("Frame Filename: {}".format(frame_fname))
 
