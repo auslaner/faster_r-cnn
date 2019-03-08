@@ -15,11 +15,6 @@ from config import pollinator_config as config
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.ERROR)
 
-LARGE_POLLINATORS = ["Bombus",
-                     "Butterfly"
-                     "Hyles lineata",
-                     "Masarinae"]
-
 
 def create_connection(db_file):
     """ create a database connection to the SQLite database
