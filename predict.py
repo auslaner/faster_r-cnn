@@ -49,7 +49,7 @@ category_idx = label_map_util.create_category_index(categories)
 
 vs = FileVideoStream(args["video"]).start()
 fourcc = cv2.VideoWriter_fourcc("M", "J", "P", "G")
-annotated_video = cv2.VideoWriter("annotated_video.avi", fourcc, 1, (640, 480))
+annotated_video = cv2.VideoWriter("annotated_video.avi", fourcc, 5, (640, 480))
 
 # Create a session to perform inference
 with model.as_default():
@@ -122,7 +122,7 @@ with model.as_default():
                               COLORS[idx], 2)
                 y = start_y - 10 if start_y - 10 > 10 else start_y + 10
                 cv2.putText(output, label, (start_x, y),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.3, COLORS[idx], 1)
+                            cv2.FONT_HERSHEY_SIMPLEX, 1, COLORS[idx], 1)
 
             # Write the labeled frame to the output video file
             annotated_video.write(output)
