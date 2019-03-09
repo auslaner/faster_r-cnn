@@ -1,3 +1,4 @@
+import argparse
 import logging
 import os
 import random
@@ -14,6 +15,12 @@ from config import pollinator_config as config
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.ERROR)
+
+# Construct the argument parser and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-o", "--output", required=True,
+                help="path to save record files")
+args = vars(ap.parse_args())
 
 
 def create_connection(db_file):
@@ -60,7 +67,7 @@ def path_exists(p):
 
 def main(_):
     # Open the classes output file
-    f = open(config.CLASSES_FILE, "w")
+    f = open(os.path.sep.join([args["output"], "classes.pbtxt"]), "w")
 
     # Loop over the classes
     for k, v in config.CLASSES.items():
@@ -128,8 +135,8 @@ def main(_):
 
     # Initialize the data split files
     datasets = [
-        ("train", train_keys, config.TRAIN_RECORD),
-        ("test", test_keys, config.TEST_RECORD)
+        ("train", train_keys, os.path.sep.join([args["output"], "training.record"])),
+        ("test", test_keys, os.path.sep.join([args["output"], "testing.record"]))
     ]
 
     # Loop over the datasets
