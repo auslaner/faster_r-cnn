@@ -35,6 +35,9 @@ errors = {"Type I": [], "Type II": 0}
 # Total frames evaluated
 TOTAL_FRAMES = 8202
 
+# Total pollinators
+TOTAL_POLLINATORS = len(FRAMES_WITH_POLLINATORS_FEW) + sum(FRAMES_WITH_POLLINATORS_MANY.values())
+
 
 def plot_eval(num_evals, correct):
     # Get a list of correct scores without the None values
@@ -77,7 +80,7 @@ def plot_eval(num_evals, correct):
     print("Total accuracy: {}".format(cor_pct))
     print("Frame classification accuracy: {}".format(len(correct) / TOTAL_FRAMES))
     print("Accuracy on frames with pollinators: {:.2%}"
-          .format(len(pure_correct) / (len(FRAMES_WITH_POLLINATORS_FEW) + sum(FRAMES_WITH_POLLINATORS_MANY.values()))))
+          .format(len(pure_correct) / TOTAL_POLLINATORS))
 
 
 def main():
