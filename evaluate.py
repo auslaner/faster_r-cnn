@@ -42,18 +42,24 @@ def plot_eval(num_evals, correct):
     bin_width = 0.1
 
     # Plot distribution of Type I Error
-    plt.hist(errors["Type I"], bins=np.arange(min(errors["Type I"]), max(errors["Type I"]) + bin_width, bin_width))
-    plt.title("Model Confidence Distribution of Type I Errors")
-    plt.ylabel("Frequency")
-    plt.xlabel("Confidence Score")
-    plt.show()
+    if len(errors["Type I"]) > 0:
+        plt.hist(errors["Type I"], bins=np.arange(min(errors["Type I"]), max(errors["Type I"]) + bin_width, bin_width))
+        plt.title("Model Confidence Distribution of Type I Errors")
+        plt.ylabel("Frequency")
+        plt.xlabel("Confidence Score")
+        plt.show()
+    else:
+        print("[!] Zero Type I Errors!")
 
     # Plot distribution of correct evals
-    plt.hist(pure_correct, bins=np.arange(min(pure_correct), max(pure_correct) + bin_width, bin_width))
-    plt.title("Model Confidence Distribution of Correct Evaluations")
-    plt.ylabel("Frequency")
-    plt.xlabel("Confidence Score")
-    plt.show()
+    if len(pure_correct) > 0:
+        plt.hist(pure_correct, bins=np.arange(min(pure_correct), max(pure_correct) + bin_width, bin_width))
+        plt.title("Model Confidence Distribution of Correct Evaluations")
+        plt.ylabel("Frequency")
+        plt.xlabel("Confidence Score")
+        plt.show()
+    else:
+        print("[!] Zero correct classifications on frames with pollinators!")
 
     # Plot comparison of errors and correct evals
     cor_pct = len(correct)/num_evals
