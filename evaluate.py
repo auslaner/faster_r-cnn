@@ -75,7 +75,9 @@ def plot_eval(num_evals, correct):
     print("Average confidence of Type I Error: {}".format(np.mean(errors["Type I"])))
     print("Average confidence of correct classifications: {}".format(np.mean(pure_correct)))
     print("Total accuracy: {}".format(cor_pct))
-    print("Frame classification accuracy: {}".format(len(correct)/TOTAL_FRAMES))
+    print("Frame classification accuracy: {}".format(len(correct) / TOTAL_FRAMES))
+    print("Accuracy on frames with pollinators: {:.2%}"
+          .format(len(pure_correct) / (len(FRAMES_WITH_POLLINATORS_FEW) + sum(FRAMES_WITH_POLLINATORS_MANY.values()))))
 
 
 def main():
