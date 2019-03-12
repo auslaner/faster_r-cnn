@@ -34,6 +34,7 @@ errors = {"Type I": [], "Type II": 0}
 
 # Total frames evaluated
 TOTAL_FRAMES = 8202
+TOTAL_FRAMES_WITH_POLLINATORS = len(FRAMES_WITH_POLLINATORS_FEW) + len(FRAMES_WITH_POLLINATORS_MANY)
 
 # Total pollinators
 TOTAL_POLLINATORS = len(FRAMES_WITH_POLLINATORS_FEW) + sum(FRAMES_WITH_POLLINATORS_MANY.values())
@@ -150,6 +151,17 @@ def evaluate_video(model, video_stream, video_type, total_evals, correct):
                 image = video_stream.read()
                 frame += 1
                 if image is None:
+                    continue
+
+                """
+                We don't want to have a hugely unbalanced evaluation 
+                dataset between frames with and without pollinators.
+                
+                Since there are fewer examples of frames with
+                pollinators, skip some frames without pollinators
+                to balance testing.
+                """
+                if video_type == "few" and frame < FRAMES_WITH_POLLINATORS_FEW[-1] - TOTAL_FRAMES_WITH_POLLINATORS:
                     continue
 
                 total_evals += 1
