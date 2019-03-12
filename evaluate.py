@@ -39,6 +39,9 @@ TOTAL_FRAMES_WITH_POLLINATORS = len(FRAMES_WITH_POLLINATORS_FEW) + len(FRAMES_WI
 # Total pollinators
 TOTAL_POLLINATORS = len(FRAMES_WITH_POLLINATORS_FEW) + sum(FRAMES_WITH_POLLINATORS_MANY.values())
 
+# Set the minimum confidence for a detection to be counted
+MIN_CONFIDENCE = 0.5
+
 
 def plot_eval(num_evals, correct):
     # Get a list of correct scores without the None values
@@ -206,7 +209,7 @@ def evaluate_video(model, video_stream, video_type, total_evals, correct):
                 # Loop over the bounding box predictions
                 detects = 0
                 for box, score, label in zip(boxes, scores, labels):
-                    if score < 0.75:
+                    if score < MIN_CONFIDENCE:
                         continue
 
                     detects += 1
