@@ -2,6 +2,7 @@ import argparse
 import cv2
 import imutils
 import numpy as np
+import os
 import tensorflow as tf
 
 from imutils.video import FileVideoStream
@@ -49,7 +50,8 @@ category_idx = label_map_util.create_category_index(categories)
 
 vs = FileVideoStream(args["video"]).start()
 fourcc = cv2.VideoWriter_fourcc("M", "J", "P", "G")
-annotated_video = cv2.VideoWriter("annotated_video.avi", fourcc, 5, (640, 480))
+model_num = args["model"].split(os.path.sep)[-3]
+annotated_video = cv2.VideoWriter("annotated_video" + "-" + model_num + ".avi", fourcc, 5, (640, 480))
 
 # Create a session to perform inference
 with model.as_default():
