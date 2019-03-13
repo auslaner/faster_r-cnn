@@ -67,11 +67,19 @@ with model.as_default():
         classes_tensor = model.get_tensor_by_name("detection_classes:0")
         num_detections = model.get_tensor_by_name("num_detections:0")
 
+        frame = 0
+
         # Load the image from disk
         while vs.more():
             image = vs.read()
+            frame += 1
             if image is None:
                 continue
+
+            if frame > 10000:
+                # Don't bother processing more than 10k frames
+                print("[!] To save time, video evaluations are limited to 10k frames. Stopping now...")
+                break
 
             (h, w) = image.shape[:2]
 
