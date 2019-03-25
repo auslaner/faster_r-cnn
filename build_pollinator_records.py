@@ -132,11 +132,14 @@ def main(_):
     # Create training and testing splits from our data dictionary
     train_keys, test_keys = train_test_split(list(D.keys()),
                                              test_size=config.TEST_SIZE, random_state=42)
+    # Split the test keys further to create a validation set
+    test_keys, validation_keys = train_test_split(test_keys, random_state=42)
 
     # Initialize the data split files
     datasets = [
         ("train", train_keys, os.path.sep.join([args["output"], "training.record"])),
-        ("test", test_keys, os.path.sep.join([args["output"], "testing.record"]))
+        ("test", test_keys, os.path.sep.join([args["output"], "testing.record"])),
+        ("validation", validation_keys, os.path.sep.join([args["output"], "validation.record"]))
     ]
 
     # Loop over the datasets
